@@ -1,9 +1,10 @@
 from flask import Flask, jsonify, make_response
-from v1.views import v1
+from v1.views import app_list
 
 app = Flask(__name__)
 
-app.register_blueprint(v1)
+for child_app in app_list:
+  app.register_blueprint(child_app)
 
 @app.route('/')
 def index():
