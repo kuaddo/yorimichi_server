@@ -1,7 +1,10 @@
-from flask import Blueprint, jsonify, make_response
+from flask import Blueprint, jsonify, make_response, request
 
 app = Blueprint('users', __name__, url_prefix='/v1/users')
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
-  return make_response(jsonify({'message': 'This is user view root'}))
+  if request.method == 'POST':
+    return make_response(jsonify({'message': 'Create User.'}))
+  else:
+    return make_response(jsonify({'message': 'This is user view root'}))
