@@ -4,3 +4,6 @@ memo/
 
 config.py
 logs
+
+credentials
+.DS_Store
