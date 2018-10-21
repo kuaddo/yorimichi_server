@@ -12,7 +12,7 @@ def create_post():
     return make_response(jsonify({'message': 'error'}), 400)
 
   json = request.json
-  if not (json.has_key('b64image') and json.has_key('place_uid') and json.has_key('uuid')):
+  if not ('b64image' in json and 'place_uid' in json and 'uuid' in json):
     return make_response(jsonify({'message': 'Require b64, place_uid, uuid.'}), 400)
   
   # get user_id from uuid
