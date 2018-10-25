@@ -1,5 +1,5 @@
 from utils.cloud_storage_manager import uploadPost, downloadPost
-from models.users import get_user
+from models.users import get_user_by_uuid
 from models.posts import create
 
 from flask import Blueprint, jsonify, make_response, request
