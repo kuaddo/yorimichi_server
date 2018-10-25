@@ -11,3 +11,20 @@ def create(image_name, user_id, place_uid):
   query(stmt)
 
   return
+
+def get_posts_by_place(place_uid):
+  stmt = """
+    SELECT  p.id AS id,
+            p.user_id AS user_id,
+            p.place_uid AS place_uid,
+            "gs://yorimichi_posts" AS bucket,
+            p.image_name AS image_name,
+            DATE_FORMAT(p.created_at, '%Y-%m-%d %H:%i:%S') AS created_at,
+            DATE_FORMAT(p.updated_at, '%Y-%m-%d %H:%i:%S') AS updated_at
+    FROM    posts AS p
+    WHERE   p.is_valid = 1
+      AND   p.place_uid = "{}"
+  """.format(place_uid)
+
+  res = query(stmt)
+  return res

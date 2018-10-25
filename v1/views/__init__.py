@@ -1,3 +1,3 @@
-from v1.views import index, users, posts
+from v1.views import index, users, posts, places
 
-app_list = [index.app, users.app, posts.app]
+app_list = [index.app, users.app, posts.app, places.app]
