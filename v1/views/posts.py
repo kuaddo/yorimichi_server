@@ -16,7 +16,7 @@ def create_post():
     return make_response(jsonify({'message': 'Require b64, place_uid, uuid.'}), 400)
   
   # get user_id from uuid
-  user_records = get_user(json['uuid'])
+  user_records = get_user_by_uuid(json['uuid'])
   if len(user_records) == 0:
     return make_response(jsonify({'message': 'uuid not found.'}), 400)
 
