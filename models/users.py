@@ -45,3 +45,14 @@ def get_posts_by_uuid(uuid):
 
   res = query(stmt)
   return res
+
+def add_point(uuid, point):
+  stmt = '''
+    UPDATE  users
+    SET     points = points + {}
+    WHERE   uuid = \"{}\"
+  '''.format(point, uuid)
+
+  query(stmt)
+
+  return
