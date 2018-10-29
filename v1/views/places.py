@@ -11,4 +11,4 @@ def posts(place_uid):
   if len(res) > 0:
     return make_response(jsonify({'message': 'Request Completed.', 'posts_array': res}), 200)
   else:
-    return make_response(jsonify({'message': 'No posts.'}), 204)
+    return '', 204
