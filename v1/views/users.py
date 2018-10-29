@@ -1,4 +1,4 @@
-from models.users import create_user, get_posts_by_uuid, add_point
+from models.users import create_user, get_posts_by_uuid, add_point, get_user_by_uuid
 from models.point_history import create_point_history
 from utils.token import check_api_token
 
@@ -49,12 +49,15 @@ def points(uuid):
   if 'application/json' not in  request.headers['Content-Type'].split(';'):
     return make_response(jsonify({'message': 'error'}), 400)
 
+  # check request json contains item 'point'?
+  if 'point' not in request.json:
+    return make_response(jsonify({'message': 'Require point'}), 400)
   
   user_records = get_user_by_uuid(uuid)
   if len(user_records) == 0:
     return make_response(jsonify({'message': 'No user found on specified uuid'}), 400)
 
-  add_point(uuid, json['point'])
-  create_point_history(user_records[0]['user_id'], json['point'])
+  add_point(uuid, request.json['point'])
+  create_point_history(user_records[0]['id'], request.json['point'])
 
   return make_response(jsonify({'message': 'Points successfuly gave to user.'}), 200)
