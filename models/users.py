@@ -47,11 +47,15 @@ def get_posts_by_uuid(uuid):
   return res
 
 def add_point(uuid, point):
+  now = datetime.now()
+  now_str = now.strftime('%Y-%m-%d %H:%M:%S')
+
   stmt = '''
     UPDATE  users
-    SET     points = points + {}
+    SET     points = points + {},
+            updated_at = \"{}\"
     WHERE   uuid = \"{}\"
-  '''.format(point, uuid)
+  '''.format(point, now_str, uuid)
 
   query(stmt)
 
