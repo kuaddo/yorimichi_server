@@ -8,6 +8,12 @@ app = Blueprint('posts', __name__, url_prefix='/v1/posts/')
 
 @app.route('/', methods=['POST'])
 def create_post():
+  # API Token exist?
+  if 'X_API_Token' not in request.headers:
+    return make_response(jsonify({'message': 'API token not found'}), 400)
+  # API Token Correct?
+  if not check_api_token(request.headers['X_API_Token']):
+    return make_response(jsonify({'message': 'API token is not correct'}), 400)
   # When multipule Content-Type Specified, 'application/json' != request.headers['Content-Type'] is True.
   # So, split request.headers['Content-Type'] to list by ';'.
   if 'application/json' not in  request.headers['Content-Type'].split(';'):

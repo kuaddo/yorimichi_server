@@ -22,6 +22,12 @@ def index():
 
 @app.route('/<uuid>/posts/', methods=['GET'])
 def posts(uuid):
+  # API Token exist?
+  if 'X_API_Token' not in request.headers:
+    return make_response(jsonify({'message': 'API token not found'}), 400)
+  # API Token Correct?
+  if not check_api_token(request.headers['X_API_Token']):
+    return make_response(jsonify({'message': 'API token is not correct'}), 400)
   res = get_posts_by_uuid(uuid)
   
   if len(res) > 0:
