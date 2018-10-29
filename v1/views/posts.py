@@ -8,7 +8,9 @@ app = Blueprint('posts', __name__, url_prefix='/v1/posts/')
 
 @app.route('/', methods=['POST'])
 def create_post():
-  if request.headers['Content-Type'] != 'application/json':
+  # When multipule Content-Type Specified, 'application/json' != request.headers['Content-Type'] is True.
+  # So, split request.headers['Content-Type'] to list by ';'.
+  if 'application/json' not in  request.headers['Content-Type'].split(';'):
     return make_response(jsonify({'message': 'error'}), 400)
 
   json = request.json
