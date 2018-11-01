@@ -1,5 +1,5 @@
 from models.posts import get_posts_by_place
-from utils.token import check_api_token
+from utils.apitoken import check_api_token
 
 from flask import Blueprint, jsonify, make_response, request
 

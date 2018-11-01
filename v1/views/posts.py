@@ -1,5 +1,5 @@
 from utils.cloud_storage_manager import uploadPost, downloadPost
-from utils.token import check_api_token
+from utils.apitoken import check_api_token
 from models.users import get_user_by_uuid
 from models.posts import create
 

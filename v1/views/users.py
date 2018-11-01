@@ -1,6 +1,6 @@
 from models.users import create_user, get_posts_by_uuid, add_point, get_user_by_uuid
 from models.point_history import create_point_history
-from utils.token import check_api_token
+from utils.apitoken import check_api_token
 
 from flask import Blueprint, jsonify, make_response, request
 
