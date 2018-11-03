@@ -1,6 +1,6 @@
 from models.posts import get_posts_by_place
 from utils.apitoken import check_api_token
-from utils.api_wrapper import bykeyword, bytype, nextpage
+from utils.api_wrapper import bykeyword, bytype, nextpage, direction
 
 from flask import Blueprint, jsonify, make_response, request, Response
 
@@ -80,3 +80,25 @@ def next():
   params = request.args
   return make_response(jsonify({'message': 'next Token',
                                 'nextToken': params['nextToken']}), 200)
+
+@app.route('/direction/', methods=['GET'])
+def getdirection():
+  # API Token exist?
+  if 'X_API_Token' not in request.headers:
+    return make_response(jsonify({'message': 'API token not found'}), 400)
+  # API Token Correct?
+  if not check_api_token(request.headers['X_API_Token']):
+    return make_response(jsonify({'message': 'API token is not correct'}), 400)
+
+  params = request.args
+  
+  origin = params.get('origin')
+  destination = params.get('destination')
+
+  if origin is None:
+    return make_response(jsonify({'message': 'Missing parameter \'origin\''}), 400)
+  if destination is None:
+    return make_response(jsonify({'message': 'Missing parameter \'destination\''}), 400)
+
+  content, code = direction(origin, destination)
+  return make_response(Response(content, headers={'Content-Type': 'application/json'}), code)

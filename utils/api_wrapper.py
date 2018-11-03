@@ -54,8 +54,12 @@ def nextpage(nextToken):
 
 def direction(origin, destination):
   params = {
+    'langage': 'ja',
+    'mode': 'walking',
+    
     'origin': origin,
-    'destination': destination
+    'destination': destination,
+    'key': os.environ['PLACE_API_KEY']
   }
 
   url = 'https://maps.googleapis.com/maps/api/directions/json?{}'.format(urllib.parse.urlencode(params))
