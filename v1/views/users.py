@@ -21,6 +21,22 @@ def index():
   else:
     return make_response(jsonify({'message': 'This is user view root'}))
 
+@app.route('/<uuid>/', methods=['GET'])
+def get_user(uuid):
+  # API Token exist?
+  if 'X_API_Token' not in request.headers:
+    return make_response(jsonify({'message': 'API token not found'}), 400)
+  # API Token Correct?
+  if not check_api_token(request.headers['X_API_Token']):
+    return make_response(jsonify({'message': 'API token is not correct'}), 400)
+
+  res = get_user_by_uuid(uuid)
+
+  if len(res) > 0:
+    return make_response(jsonify(res[0]), 200)
+  else:
+    return '', 204
+
 @app.route('/<uuid>/posts/', methods=['GET'])
 def posts(uuid):
   # API Token exist?
