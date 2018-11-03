@@ -54,7 +54,7 @@ def nextpage(nextToken):
 
 def direction(origin, destination):
   params = {
-    'langage': 'ja',
+    'language': 'ja',
     'mode': 'walking',
     
     'origin': origin,
