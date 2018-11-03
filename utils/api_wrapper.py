@@ -52,6 +52,23 @@ def bytype(location, radius, type_value):
 def nextpage(nextToken):
   pass
 
+def direction(origin, destination):
+  params = {
+    'origin': origin,
+    'destination': destination
+  }
+
+  url = 'https://maps.googleapis.com/maps/api/directions/json?{}'.format(urllib.parse.urlencode(params))
+  req = urllib.request.Request(url)
+  try:
+    with urllib.request.urlopen(req) as res:
+      body = res.read().decode('utf-8')
+      return body, 200
+  except urllib.error.HTTPError as err:
+    return err, 400
+  except urllib.error.URLError as err:
+    return err, 400
+
 def photo(photoReference, maxWidth, maxHeight):
   params = {
     'photoreference': photoReference,
