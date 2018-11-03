@@ -1,7 +1,8 @@
 from models.posts import get_posts_by_place
 from utils.apitoken import check_api_token
+from utils.api_wrapper import bykeyword, bytype, nextpage
 
-from flask import Blueprint, jsonify, make_response, request
+from flask import Blueprint, jsonify, make_response, request, Response
 
 app = Blueprint('places', __name__, url_prefix='/v1/places')
 
@@ -21,7 +22,7 @@ def posts(place_uid):
     return '', 204
 
 @app.route('/searchbytype/', methods=['GET'])
-def bytype():
+def getbytype():
   # API Token exist?
   if 'X_API_Token' not in request.headers:
     return make_response(jsonify({'message': 'API token not found'}), 400)
@@ -40,13 +41,11 @@ def bytype():
   if type_value is None:
     return make_response(jsonify({'message': 'Missing parameter \'type\''}), 400)
   
-  return make_response(jsonify({'message': 'type search',
-                                'location': location,
-                                'radius': radius,
-                                'type': type_value}), 200)
+  content, code = bytype(location, radius, type_value)
+  return make_response(Response(content, headers={'Content-Type': 'application/json'}), code)
 
 @app.route('/searchbykeyword/', methods=['GET'])
-def bykeyword():
+def getbykeyword():
   # API Token exist?
   if 'X_API_Token' not in request.headers:
     return make_response(jsonify({'message': 'API token not found'}), 400)
@@ -66,10 +65,8 @@ def bykeyword():
   if keyword is None:
     return make_response(jsonify({'message': 'Missing parameter \'keyword\''}), 400)
 
-  return make_response(jsonify({'message': 'Keyword search',
-                                'location': location,
-                                'raidus': radius,
-                                'keyword': keyword}), 200)
+  content, code = bykeyword(location, radius, keyword)
+  return make_response(Response(content, headers={'Content-Type': 'application/json'}), code)
 
 @app.route('/getnext/', methods=['GET'])
 def next():

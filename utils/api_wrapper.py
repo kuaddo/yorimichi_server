@@ -18,11 +18,13 @@ def bykeyword(location, radius, keyword):
   try:
     with urllib.request.urlopen(req) as res:
       body = res.read().decode('utf-8')
-      return body
+      return body, 200
   except urllib.error.HTTPError as err:
     print(err)
+    return err, 400
   except urllib.error.URLError as err:
     print(err)
+    return err, 400
 
 def bytype(location, radius, type_value):
   params = {
@@ -38,11 +40,13 @@ def bytype(location, radius, type_value):
   try:
     with urllib.request.urlopen(req) as res:
       body = res.read().decode('utf-8')
-      return body
+      return body, 200
   except urllib.error.HTTPError as err:
     print(err)
+    return err, 400
   except urllib.error.URLError as err:
     print(err)
+    return err, 400
 
 def nextpage(nextToken):
   pass
