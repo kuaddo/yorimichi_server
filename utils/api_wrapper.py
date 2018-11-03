@@ -1,7 +1,8 @@
 import os
 import urllib.request
+import base64
 
-baseurl = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?{}"
+baseurl = "https://maps.googleapis.com/maps/api/place{}?{}"
 
 def bykeyword(location, radius, keyword):
   params = {
@@ -12,7 +13,7 @@ def bykeyword(location, radius, keyword):
     'key': os.environ['PLACE_API_KEY']
   }
 
-  url = baseurl.format(urllib.parse.urlencode(params)) + '&opennow'
+  url = baseurl.format('/nearbysearch/json', urllib.parse.urlencode(params)) + '&opennow'
   print(url)
   req = urllib.request.Request(url)
   try:
@@ -35,7 +36,7 @@ def bytype(location, radius, type_value):
     'key': os.environ['PLACE_API_KEY']
   }
 
-  url = baseurl.format(urllib.parse.urlencode(params)) + '&opennow'
+  url = baseurl.format('/nearbysearch/json', urllib.parse.urlencode(params)) + '&opennow'
   req = urllib.request.Request(url)
   try:
     with urllib.request.urlopen(req) as res:
@@ -50,3 +51,31 @@ def bytype(location, radius, type_value):
 
 def nextpage(nextToken):
   pass
+
+def photo(photoReference, maxWidth, maxHeight):
+  params = {
+    'photoreference': photoReference,
+    'maxwidth': maxWidth,
+    'maxheight': maxHeight,
+    'key': os.environ['PLACE_API_KEY']
+  }
+
+  url = baseurl.format('/photo', urllib.parse.urlencode(params))
+  print(url)
+  req = urllib.request.Request(url)
+  try:
+    with urllib.request.urlopen(req) as res:
+      body = res.read()
+      return b64string, 302
+  except urllib.error.HTTPError as err:
+    return err, 400
+  except urllib.error.URLError as err:
+    return err, 400
+
+if __name__ == '__main__':
+  photoReference = "CmRaAAAA6mwU-yVTSziKp6lidH6MnPLMuJ1J9oe_J3uHRlg6uK-n-YtWrCfeAOhJ3JuhZbL6CLvNtzBWMyQx0abVKQK7UUgChVpsqYLhzSkWunLDCSJNK_AlUO8Ddd1vm4JKwSCjEhAp4ERYtaR0ACSh-6CWhMQeGhT9zuyljfUbD1TT3dIQu6WuV536EQ"
+  maxHeight = 600
+  maxWidth = 600
+  content, code = photo(photoReference, maxWidth, maxHeight)
+  print(content)
+  print(code)
