@@ -1,6 +1,6 @@
 from models.posts import get_posts_by_place
 from utils.apitoken import check_api_token
-from utils.api_wrapper import bykeyword, bytype, nextpage, direction
+from utils.api_wrapper import bykeyword, bytype, nextpage, direction, photo
 
 from flask import Blueprint, jsonify, make_response, request, Response
 
@@ -80,6 +80,35 @@ def next():
   params = request.args
   return make_response(jsonify({'message': 'next Token',
                                 'nextToken': params['nextToken']}), 200)
+
+@app.route('/photo/', methods=['GET'])
+def getphoto():
+  # API Token exist?
+  if 'X_API_Token' not in request.headers:
+    return make_response(jsonify({'message': 'API token not found'}), 400)
+  # API Token Correct?
+  if not check_api_token(request.headers['X_API_Token']):
+    return make_response(jsonify({'message': 'API token is not correct'}), 400)
+
+  params = request.args
+  photoreference = params.get('photoreference')
+  maxWidth = params.get('maxwidth')
+  maxHeight = params.get('maxheight')
+
+  if photoreference is None:
+    return make_response(jsonify({'message': 'Missing parameter \'photoreference\''}), 400)
+  if maxWidth is None:
+    # Use default value
+    maxWidth = 600
+  if maxHeight is None:
+    # Use default value
+    maxHeight = 600
+
+  content, code = photo(photoreference, maxWidth, maxHeight)
+  if code == 302:
+    return make_response(jsonify(content), code)
+  else:
+    return make_response(Response(content, headers={'Content-Type': 'application/json'}), code)
 
 @app.route('/direction/', methods=['GET'])
 def getdirection():

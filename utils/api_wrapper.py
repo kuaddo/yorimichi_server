@@ -1,5 +1,6 @@
 import os
 import urllib.request
+import json
 import base64
 
 baseurl = "https://maps.googleapis.com/maps/api/place{}?{}"
@@ -82,21 +83,12 @@ def photo(photoReference, maxWidth, maxHeight):
   }
 
   url = baseurl.format('/photo', urllib.parse.urlencode(params))
-  print(url)
   req = urllib.request.Request(url)
   try:
     with urllib.request.urlopen(req) as res:
-      body = res.read()
-      return b64string, 302
+      redirect_url = res.geturl()
+      return {'redirect_url': redirect_url}, 302
   except urllib.error.HTTPError as err:
     return err, 400
   except urllib.error.URLError as err:
     return err, 400
-
-if __name__ == '__main__':
-  photoReference = "CmRaAAAA6mwU-yVTSziKp6lidH6MnPLMuJ1J9oe_J3uHRlg6uK-n-YtWrCfeAOhJ3JuhZbL6CLvNtzBWMyQx0abVKQK7UUgChVpsqYLhzSkWunLDCSJNK_AlUO8Ddd1vm4JKwSCjEhAp4ERYtaR0ACSh-6CWhMQeGhT9zuyljfUbD1TT3dIQu6WuV536EQ"
-  maxHeight = 600
-  maxWidth = 600
-  content, code = photo(photoReference, maxWidth, maxHeight)
-  print(content)
-  print(code)
