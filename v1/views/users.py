@@ -76,4 +76,6 @@ def points(uuid):
   add_point(uuid, request.json['point'])
   create_point_history(user_records[0]['id'], request.json['point'])
 
-  return make_response(jsonify({'message': 'Points successfuly gave to user.'}), 200)
+  res = get_user_by_uuid(uuid)
+
+  return make_response(jsonify(res[0]), 200)
