@@ -1,4 +1,4 @@
-from models.users import create_user, get_posts_by_uuid, add_point, get_user_by_uuid
+from models.users import create_user, get_posts_by_uuid, add_point, get_user_by_uuid, purchase_goods
 from models.point_history import create_point_history
 from models.goods import get_goods
 from utils.apitoken import check_api_token
@@ -93,6 +93,27 @@ def goods(uuid):
   user_records = get_user_by_uuid(uuid)
   if len(user_records) == 0:
     return make_response(jsonify({'message': 'No user found on specified uuid'}), 400)
+
+  ret = get_goods(user_records[0]['id'])
+  return make_response(jsonify(ret), 200)
+
+@app.route('<uuid>/purchase/goods/<goods_id>/', methods=['POST'])
+def purchase(uuid, goods_id):
+  # API Token exist?
+  if 'X_API_Token' not in request.headers:
+    return make_response(jsonify({'message': 'API token not found'}), 400)
+  # API Token Correct?
+  if not check_api_token(request.headers['X_API_Token']):
+    return make_response(jsonify({'message': 'API token is not correct'}), 400)
+
+  user_records = get_user_by_uuid(uuid)
+  if len(user_records) == 0:
+    return make_response(jsonify({'message': 'No user found on specified uuid'}), 400)
+
+  content, code = purchase_goods(user_records[0]['id'], goods_id)
+
+  if code == 400:
+    return make_response(jsonify(content), code)
 
   ret = get_goods(user_records[0]['id'])
   return make_response(jsonify(ret), 200)

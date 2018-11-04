@@ -60,3 +60,54 @@ def add_point(uuid, point):
   query(stmt)
 
   return
+
+def purchase_goods(user_id, goods_id):
+  check_user_goods_query = '''
+    SELECT  *
+    FROM    users_goods
+    WHERE   user_id = {}
+      AND   goods_id = {}
+  '''.format(user_id, goods_id)
+
+  if len(query(check_user_goods_query)) > 0:
+    return {'message': 'User already have this goods'}, 400
+
+  user_points_query = '''
+    SELECT  *
+    FROM    users
+    WHERE   id = {}
+  '''.format(user_id)
+
+  user_points = query(user_points_query)[0]['points']
+
+  require_points_query = '''
+    SELECT  *
+    FROM    goods
+    WHERE   id = {}
+  '''.format(goods_id)
+
+  ret = query(require_points_query)
+  if len(ret) == 0:
+    return {'message': 'Specified goods not found.'}, 400
+
+  require_points = ret[0]['value']
+
+  if user_points < require_points:
+    # User don't have enough points
+    return {'message': 'User do not have enough points to parchase.'}, 400
+  
+  user_update_query = '''
+    UPDATE  users
+    SET     points = points - {}
+    WHERE   id = {}
+  '''.format(require_points, user_id)
+
+  user_goods_insert_query = '''
+    INSERT INTO users_goods (user_id, goods_id, created_at, updated_at, is_valid)
+    VALUES ({}, {}, NOW(), NOW(), 1)
+  '''.format(user_id, goods_id)
+
+  query(user_update_query)
+  query(user_goods_insert_query)
+
+  return {}, 200
