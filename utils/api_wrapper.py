@@ -51,7 +51,21 @@ def bytype(location, radius, type_value):
     return err, 400
 
 def nextpage(nextToken):
-  pass
+  params = {
+    'pagetoken': nextToken,
+    'key': os.environ['PLACE_API_KEY']
+  }
+
+  url = baseurl.format('/nearbysearch/json', urllib.parse.urlencode(params))
+  req = urllib.request.Request(url)
+  try:
+    with urllib.request.urlopen(req) as res:
+      body = res.read().decode('utf-8')
+      return body, 200
+  except urllib.error.HTTPError as err:
+    return err, 400
+  except urllib.error.URLError as err:
+    return err, 400
 
 def direction(origin, destination):
   params = {

@@ -78,8 +78,13 @@ def next():
     return make_response(jsonify({'message': 'API token is not correct'}), 400)
 
   params = request.args
-  return make_response(jsonify({'message': 'next Token',
-                                'nextToken': params['nextToken']}), 200)
+
+  pageToken = params.get('pagetoken')
+  if pageToken is None:
+    return make_response(jsonify({'message': 'Missing paramter \'pagetoken\''}), 400)
+
+  content, code = nextpage(pageToken)
+  return make_response(Response(content, headers={'Content-Type': 'application/json'}), code)
 
 @app.route('/photo/', methods=['GET'])
 def getphoto():
