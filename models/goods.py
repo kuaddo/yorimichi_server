@@ -48,3 +48,18 @@ def get_goods(user_id):
   icons = query(icons_query)
 
   return {'colors': colors, 'pens': pens, 'icons': icons}
+
+def get_icon(icon_id):
+  base_query = '''
+    SELECT  icons.*
+    FROM    icons
+      INNER JOIN goods ON icons.goods_id = goods.id
+    WHERE   goods_id = {}
+      AND   goods.is_valid = 1
+  '''
+
+  icon_query = base_query.format(icon_id)
+
+  ret = query(icon_query)
+
+  return ret
