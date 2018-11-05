@@ -19,7 +19,9 @@ def create_user():
         VALUES (\"{}\", 0, \"{}\", \"{}\", 1)
       '''.format(uuid, now_str, now_str)
       query(stmt)
-      return uuid
+      
+      stmt = 'SELECT * FROM users WHERE uuid = \"{}\"'.format(uuid)
+      return query(stmt)[0]
 
   return None
 

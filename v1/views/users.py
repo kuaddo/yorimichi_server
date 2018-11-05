@@ -17,8 +17,8 @@ def index():
     return make_response(jsonify({'message': 'API token is not correct'}), 400)
   # API Key Corrected, begin create user.
   if request.method == 'POST':
-    uuid = create_user()
-    return make_response(jsonify({'message': 'Create User.', 'uuid': uuid}))
+    created_user = create_user()
+    return make_response(jsonify(created_user))
   else:
     return make_response(jsonify({'message': 'This is user view root'}))
 
