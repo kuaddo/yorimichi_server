@@ -21,7 +21,20 @@ def create_user():
       query(stmt)
       
       stmt = 'SELECT * FROM users WHERE uuid = \"{}\"'.format(uuid)
-      return query(stmt)[0]
+      user = query(stmt)[0]
+
+      # make default users_goods records
+      stmt = '''
+        INSERT INTO users_goods 
+          (user_id, goods_id, created_at, updated_at, is_valid)
+        SELECT	users.id, t.id, NOW(), NOW(), 1
+        FROM	users, 
+              (SELECT id FROM goods WHERE id in (1, 2, 11, 12, 21)) AS t
+        WHERE users.id = {}
+      '''.format(user['id'])
+      query(stmt)
+
+      return user
 
   return None
 
