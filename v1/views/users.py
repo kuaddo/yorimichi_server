@@ -1,4 +1,4 @@
-from models.users import create_user, get_posts_by_uuid, add_point, get_user_by_uuid, purchase_goods
+from models.users import create_user, get_posts_by_uuid, add_point, get_user_by_uuid, purchase_goods, change_icon
 from models.point_history import create_point_history
 from models.goods import get_goods
 from utils.apitoken import check_api_token
@@ -117,3 +117,23 @@ def purchase(uuid, goods_id):
 
   ret = get_goods(user_records[0]['id'])
   return make_response(jsonify(ret), 200)
+
+@app.route('<uuid>/icon/<icon_id>/', methods=['PATCH'])
+def set_icon(uuid, icon_id):
+  # API Token exist?
+  if 'X_API_Token' not in request.headers:
+    return make_response(jsonify({'message': 'API token not found'}), 400)
+  # API Token Correct?
+  if not check_api_token(request.headers['X_API_Token']):
+    return make_response(jsonify({'message': 'API token is not correct'}), 400)
+
+  user_records = get_user_by_uuid(uuid)
+  if len(user_records) == 0:
+    return make_response(jsonify({'message': 'No user found on specified uuid'}), 400)
+
+  content, code = change_icon(user_records[0]['id'], icon_id)
+
+  if code == 400:
+    return make_response(jsonify(content), code)
+
+  return make_response(jsonify(get_user_by_uuid(uuid)[0]), 200)

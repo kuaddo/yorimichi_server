@@ -126,3 +126,37 @@ def purchase_goods(user_id, goods_id):
   query(user_goods_insert_query)
 
   return {}, 200
+
+def change_icon(user_id, icon_id):
+  check_icon_query = '''
+    SELECT  *
+    FROM    icons
+      INNER JOIN goods ON goods.id = icons.goods_id
+    WHERE   goods.is_valid = 1
+      AND   icons.goods_id = {}
+  '''.format(icon_id)
+  
+  icons = query(check_icon_query)
+  if len(icons) == 0:
+    return {'message': 'Specified icon not found'}, 400
+
+  check_goods_user_query = '''
+    SELECT  *
+    FROM    users_goods
+    WHERE   user_id = {}
+      AND   goods_id = {}
+      AND   is_valid = 1
+  '''.format(user_id, icon_id)
+  goods_users = query(check_goods_user_query)
+
+  if len(goods_users) == 0:
+    return {'message': 'This user do not purchased this goods'}, 400
+  
+  update_user_query = '''
+    UPDATE  users
+    SET     icon_id = {}
+    WHERE   id = {}
+  '''.format(icon_id, user_id)
+  query(update_user_query)
+
+  return {}, 200
