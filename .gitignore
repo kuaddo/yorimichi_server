@@ -10,3 +10,4 @@ credentials
 
 .DS_Store
 .python-version
+.vscode
