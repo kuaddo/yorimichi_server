@@ -8,6 +8,7 @@ flask = "*"
 uwsgi = "*"
 pymysql = "*"
 google-cloud-storage = "*"
+itsdangerous = "*"
 
 [dev-packages]
 
