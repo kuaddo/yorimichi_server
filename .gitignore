@@ -9,3 +9,4 @@ credentials
 .env
 
 .DS_Store
+.python-version
