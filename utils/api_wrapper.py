@@ -106,3 +106,20 @@ def photo(photoReference, maxWidth, maxHeight):
     return err, 400
   except urllib.error.URLError as err:
     return err, 400
+
+def detail(placeid):
+  params = {
+    'placeid': placeid,
+    'key': os.environ['PLACE_API_KEY']
+  }
+
+  url = baseurl.format('/details/json', urllib.parse.urlencode(params))
+  req = urllib.request.Request(url)
+  try:
+    with urllib.request.urlopen(req) as res:
+      body = res.read().decode('utf-8')
+      return body, 200
+  except urllib.error.HTTPError as err:
+    return err, 400
+  except urllib.error.URLError as err:
+    return err, 400
