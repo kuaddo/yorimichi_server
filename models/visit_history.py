@@ -10,3 +10,14 @@ def visit(user_id, place_uid):
   query(stmt)
 
   return
+
+def visit_history(user_id):
+  stmt = """
+    SELECT  *
+    FROM    visit_history
+    WHERE   user_id = {}
+      AND   is_valid = 1
+    ORDER BY created_at
+  """.format(user_id)
+
+  return query(stmt)

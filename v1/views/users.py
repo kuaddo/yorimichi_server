@@ -1,7 +1,7 @@
 from models.users import create_user, get_posts_by_uuid, add_point, get_user_by_uuid, purchase_goods, change_icon
 from models.point_history import create_point_history
 from models.goods import get_goods
-from models.visit_history import visit
+from models.visit_history import visit, visit_history
 from utils.apitoken import check_api_token
 
 from flask import Blueprint, jsonify, make_response, request
@@ -156,3 +156,23 @@ def visit_place(uuid, place_uid):
 
 
   return make_response(jsonify({'message': '{} visited at {}'.format(uuid, place_uid)}), 200)
+
+@app.route('<uuid>/visit-history/', methods=['GET'])
+def get_visit_history(uuid):
+  # API Token exist?
+  if 'X_API_Token' not in request.headers:
+    return make_response(jsonify({'message': 'API token not found'}), 400)
+  # API Token Correct?
+  if not check_api_token(request.headers['X_API_Token']):
+    return make_response(jsonify({'message': 'API token is not correct'}), 400)
+
+  user_records = get_user_by_uuid(uuid)
+  if len(user_records) == 0:
+    return make_response(jsonify({'message': 'No user found on specified uuid'}), 400)
+
+  result = visit_history(user_records[0]['id'])
+
+  if len(result) == 0:
+    return '', 204
+  else:
+    return make_response(jsonify(result), 200)
