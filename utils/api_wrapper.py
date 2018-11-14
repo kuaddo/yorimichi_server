@@ -109,6 +109,7 @@ def photo(photoReference, maxWidth, maxHeight):
 
 def detail(placeid):
   params = {
+    'language': 'ja',
     'placeid': placeid,
     'key': os.environ['PLACE_API_KEY']
   }
