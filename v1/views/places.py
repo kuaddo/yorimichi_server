@@ -1,6 +1,7 @@
 from models.posts import get_posts_by_place
 from utils.apitoken import check_api_token
 from utils.api_wrapper import bykeyword, bytype, nextpage, direction, photo, detail
+from utils.param_validator import is_datetime
 
 from flask import Blueprint, jsonify, make_response, request, Response
 
@@ -14,7 +15,13 @@ def posts(place_uid):
   # API Token Correct?
   if not check_api_token(request.headers['X_API_Token']):
     return make_response(jsonify({'message': 'API token is not correct'}), 400)
-  res = get_posts_by_place(place_uid)
+
+  params = request.args
+  before = params.get('before')
+  if is_datetime(before):
+    res = get_posts_by_place(place_uid, before)
+  else:
+    res = get_posts_by_place(place_uid)
 
   if len(res) > 0:
     return make_response(jsonify({'message': 'Request Completed.', 'posts_array': res}), 200)

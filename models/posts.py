@@ -12,7 +12,12 @@ def create(image_name, user_id, place_uid):
 
   return
 
-def get_posts_by_place(place_uid):
+def get_posts_by_place(place_uid, time=None):
+  if time is None:
+    time = "NOW()"
+  else:
+    time = '\"' + time + '\"'
+
   stmt = """
     SELECT  p.id AS id,
             p.user_id AS user_id,
@@ -24,7 +29,9 @@ def get_posts_by_place(place_uid):
     FROM    posts AS p
     WHERE   p.is_valid = 1
       AND   p.place_uid = "{}"
-  """.format(place_uid)
+      AND   p.created_at <= {}
+    ORDER BY created_at DESC
+  """.format(place_uid, time)
 
   res = query(stmt)
   return res
