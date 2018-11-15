@@ -17,7 +17,7 @@ def visit_history(user_id):
     FROM    visit_history
     WHERE   user_id = {}
       AND   is_valid = 1
-    ORDER BY created_at
+    ORDER BY created_at DESC
   """.format(user_id)
 
   return query(stmt)
