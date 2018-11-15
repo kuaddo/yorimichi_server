@@ -20,6 +20,7 @@ def get_goods(user_id):
           AND   is_valid = 1
       ) AS t ON goods.id = t.goods_id
     WHERE   goods.is_valid = 1
+    ORDER BY is_purchased DESC, id ASC
   '''
 
   colors_columns = '''colors.name AS name,

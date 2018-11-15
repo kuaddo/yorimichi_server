@@ -29,7 +29,7 @@ def create_user():
           (user_id, goods_id, created_at, updated_at, is_valid)
         SELECT	users.id, t.id, NOW(), NOW(), 1
         FROM	users, 
-              (SELECT id FROM goods WHERE id in (1, 2, 11, 12, 21)) AS t
+              (SELECT id FROM goods WHERE id in (1, 8, 14, 18, 21)) AS t
         WHERE users.id = {}
       '''.format(user['id'])
       query(stmt)
